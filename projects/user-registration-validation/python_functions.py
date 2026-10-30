@@ -8,8 +8,15 @@ def validate_name(name):
     Returns:
         bool: Returns True if all validation checks pass.
     """
-
-    if name == None or len(name) < 3 or len(name.strip()) < 3 or " " in name.strip() or name[0] == '.' or name[-1] == '.' or name == 'NA':
+    allowed_punctutaion= {".", "_"}
+    if not isinstance(name, str):
+        return False
+    for letter in name:
+        if letter.isspace():
+            return False
+        if not letter.isalnum() and letter not in allowed_punctutaion:
+            return False
+    if len(name) < 3 or name[0] == '.' or name[-1] == '.' or '..' in name:
         return False 
     return True
 
@@ -25,20 +32,23 @@ def validate_email(email):
        
     bool: Returns True if all validation checks pass.
     """
-
+    if not isinstance(email, str):
+        return False
+    for letter in email:
+        if letter.isspace():
+            return False
     email_split = email.split("@")
-    if len(email_split) < 2:
+    if email.count('@') != 1:
         return False
     else:
         domain_parts = email_split[1].split(".")
         if (len(domain_parts)) < 2:
             return False
-        else:
-            for part in domain_parts:
-                if part == "":
-                    return False
+        for part in domain_parts:
+            if part == "":
+                return False
 
-    if email == '' or email.count('@') != 1 or ' ' in email or len(email.split("@")[0]) == 0 or len(email.split("@")[1]) == 0 or len(email.split("@")[1].split(".")[0]) == 0 or len(email.split("@")[1].split(".")[1]) == 0: 
+    if len(email_split[0]) < 2 or len(email_split[1]) == 0: 
         return False
     return True 
 
@@ -51,4 +61,25 @@ def validate_password(password):
     Returns:
         bool: Returns True if all validation checks pass.
     """
-    
+
+    special_chars = {"!", "@", "#", "$", "%", "^", "&", "*"}
+    has_upper, has_lower, has_digit, has_special = False, False, False, False
+    if not isinstance(password, str):
+        return False
+    if len(password) < 8:
+        return False
+    for letter in password:
+        if letter.isspace():
+            return False
+        if letter.islower():
+            has_lower = True
+        if letter.isupper():
+            has_upper = True
+        if letter.isdigit():
+            has_digit = True
+        if letter in special_chars:
+            has_special = True
+    if has_lower == True and has_upper == True and has_digit == True and has_special == True:
+        return True
+    else:
+        return False

@@ -40,8 +40,10 @@ def register_user(name, email, password):
     """
     try:
         validate_user(name, email, password)
-    except:
-        return False
+        print(name,", is successfully registered! Welcome,", name)
+    except ValueError as error:
+            print(error)
+            return False
 
     user = {
         "name": name,
